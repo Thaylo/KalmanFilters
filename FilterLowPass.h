@@ -10,17 +10,14 @@ protected:
 
 	float alpha; // smoothness
 
-	vector<float> currentState;
-
-	void performFiltering(vector<float> &input);
-
 public:
 	
-	FilterLowPass();
-	void  setTimeStep(float value);
-	float getTimeStep();
-	void inputValue(vector<float> &value);
-	void readValue(vector<float> &ret);
+	FilterLowPass(int dim = 1, float alphaValue = 0.5) : FilterDiscret(dim)
+	{
+		alpha = alphaValue;
+	}
+
+	void performFiltering(vector<float> &input);
 };
 
 

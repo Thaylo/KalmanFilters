@@ -7,13 +7,15 @@ class Filter
 {
 protected:
 	int dimensions;
+	virtual void performFiltering(vector<float> &inputValues) = 0;
+
 public:
 
-	virtual void setDimensionality(int dim)
+	virtual int getDimensionality()
 	{
-		dimensions = dim;
-	}
-	virtual void performFiltering(vector<float> &inputValues) = 0;
+		return dimensions;
+	};
+
 	virtual void inputValue(vector<float> &value) = 0;
 	virtual void readValue(vector<float> &ret) = 0;
 

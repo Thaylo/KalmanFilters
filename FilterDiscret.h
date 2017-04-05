@@ -7,12 +7,35 @@ class FilterDiscret :  public Filter
 {
 
 protected:
-	float timeStep;
+	vector<float> currentState;	
 
 public:
 	
-	virtual void  setTimeStep(float value) = 0;
-	virtual float getTimeStep() = 0;
+	FilterDiscret(int dim)
+	{
+		dimensions = dim;
+		for(int i = 0; i < dimensions; ++i)
+		{
+			currentState.push_back(0.0f);
+		}
+	}
+
+
+	/*--------------------------------------------------------------------------------------------*/
+	void
+	inputValue(vector<float> &value)
+	{
+		performFiltering(value);
+	}
+
+
+
+	/*--------------------------------------------------------------------------------------------*/
+	void readValue(vector<float> &ret)
+	{
+		ret = currentState; 
+	}
+
 };
 
 
