@@ -1,4 +1,5 @@
 #include "FilterLowPass.h"
+#include "MatrixUtils.h"
 
 using namespace std;
 
@@ -31,6 +32,31 @@ main(int argc, char **argv)
         displayVector(output);
     }
 
+
+    #define CTE 2
+
+    cout << "Hello matrix!\n";
+
+    Matrix<float> A(CTE,CTE);
+    Matrix<float> B(CTE,1);
+
+    double n = 0.25;
+    double theta = n * 2 * M_PI;
+
+    A[0][0] = cos(theta);
+    A[0][1] = -sin(theta);
+    A[1][0] = sin(theta);
+    A[1][1] = cos(theta);
+    std::cout << A;
+
+    B[0][0] = 1;
+    B[1][0] = 1;
+    std::cout << B;
+
+    Matrix<float> C = A*B;
+    cout << C;
+
     return 0;
+
     
 }

@@ -1,11 +1,8 @@
 STD :=c++17
 SRCDIR := src
-CPPFLAGS= -std=$(STD) -O3 -pthread -Wall -pedantic
-TARGET=teste
-CC=g++
-#CC=clang
+CPPFLAGS= -std=$(STD) -O3
+CC=g++-5
 TARGET := bin/filtering
-
 SRCEXT := cpp
 SOURCES := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
 OBJECTS := $(patsubst $(SRCDIR)/%, $(SRCDIR)/%,$(SOURCES:.$(SRCEXT)=.o))
@@ -14,7 +11,7 @@ all: ${TARGET}
 
 clean:
 	rm $(OBJECTS)
-	rm bin/filtering
+	rm $(TARGET)
 
 %.o: %.cpp
 	$(CC) -c $< $(CPPFLAGS)
