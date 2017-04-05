@@ -1,4 +1,5 @@
 #include "FilterLowPass.h"
+
 using namespace std;
 
 
@@ -20,7 +21,6 @@ main(int argc, char **argv)
         output.push_back(0.0f);
     }
     
-
     f.readValue(output);
     displayVector(output); 
 
@@ -30,5 +30,7 @@ main(int argc, char **argv)
         f.readValue(output);
         displayVector(output);
     }
+
+    return 0;
     
 }

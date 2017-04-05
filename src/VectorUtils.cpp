@@ -33,7 +33,7 @@ inline float
 vectorSquaredNorm(vector<float> x)
 {
     float norm2 = 0.0f;
-    for(int i = 0; i < x.size(); ++i)
+    for(unsigned i = 0; i < x.size(); ++i)
     {
         norm2 += x[i] * x[i];
     }
@@ -47,7 +47,7 @@ float
 vectorMulByScalar(vector<float> &x, float factor)
 {
     float norm2 = 0.0f;
-    for(int i = 0; i < x.size(); ++i)
+    for(unsigned i = 0; i < x.size(); ++i)
     {
         x[i] /= factor;;
     }
