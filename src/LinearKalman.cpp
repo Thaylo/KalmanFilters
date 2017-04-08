@@ -4,24 +4,70 @@
 
 /*------------------------------------------------------------------------------------------------*/
 void
-LinearKalman::performFiltering(vector<float> &input)
+LinearKalman::performFiltering(list<Matrix<float>> &inputList)
 {
-	float alpha = 0.8f;
-	
-	for(int i = 0; i < A.getNumberOfColumns(); ++i)
+	if (inputList.size() == 1)
 	{
-		currentState[i] = currentState[i] * alpha + input[i] * (1-alpha); 
+		lowPassMode = true;
+		// Performs lowpass filter as fallback.
+		auto u = inputList.front();
+		float alpha = 0.2; // stup
+		for(int i = 0; i < u.getNumberOfRows(); ++i)
+		{
+			currentState[i][0] = currentState[i][0] * alpha + u[i][0] * (1-alpha); 
+		}	
 	}
+	else 
+	{
+		common_assert(inputList.size() == 2);
+
+		lowPassMode = false;
+		auto u = inputList.front();
+		auto z = inputList.back();
+
+		Matrix<float> predictedMean(dimensions, 0);
+		Matrix<float> predictedSigma(dimensions, dimensions);
+
+		preditionStep(u, R, predictedMean, predictedSigma);
+		correctionStep(predictedMean, predictedSigma, z, Q);
+	}
+	
 }
 
 
 
 /*------------------------------------------------------------------------------------------------*/
 void
-LinearKalman::preditionStep(Matrix<float> previousMean, Matrix<float> U, Matrix<float> Sigma, 
-						 Matrix<float> R, Matrix<float> &predictedMean, Matrix<float> &updatedSigma)
+LinearKalman::inputValue(list<Matrix<float>> &inputList)
 {
-	predictedMean = A*previousMean + B*U;
+	performFiltering(inputList);
+}
+
+
+
+/*------------------------------------------------------------------------------------------------*/
+void
+LinearKalman::readValue(Matrix<float> &zk)
+{
+	if(lowPassMode)
+	{
+		zk = currentState;
+	}
+	else
+	{
+		zk = C*currentState;
+	}
+	
+}
+
+
+
+/*------------------------------------------------------------------------------------------------*/
+void
+LinearKalman::preditionStep(Matrix<float> U, Matrix<float> R, Matrix<float> &predictedMean, 
+																		Matrix<float> &updatedSigma)
+{
+	predictedMean = A*currentState + B*U;
 	updatedSigma = A*Sigma*A.transpose() + R;
 }
 
@@ -29,14 +75,14 @@ LinearKalman::preditionStep(Matrix<float> previousMean, Matrix<float> U, Matrix<
 
 /*------------------------------------------------------------------------------------------------*/
 void
-LinearKalman::correctionStep(Matrix<float> predictedMean, Matrix<float> updatedSigma, 
-	  Matrix<float> Z, Matrix<float> Q, Matrix<float> &correctedMean, Matrix<float> &correctedSigma)
+LinearKalman::correctionStep(Matrix<float> predictedMean, Matrix<float> predictedSigma, 
+	  															   Matrix<float> z, Matrix<float> Q)
 {
-	Matrix<float> Ctrans(C.transpose());
+	Matrix<float> Ct(C.transpose());
 
-	Matrix<float> K = updatedSigma*Ctrans*(C*updatedSigma*Ctrans + Q).computeInverseBySolver();
-	correctedMean = predictedMean + K*(Z - C*predictedMean);
+	Matrix<float> K = predictedSigma*Ct*(C*predictedSigma*Ct + Q).computeInverseBySolver();
+	currentState = predictedMean + K*(z - C*predictedMean); // Correct State
 	auto aux = K * C;
 	auto I = aux.identityMatrix(aux.getNumberOfColumns()); // Implementar eye(dim) igual ao matlab.
-	correctedSigma = (I - aux) * updatedSigma;
+	Sigma = (I - aux) * predictedSigma; // Correct Sigma
 }

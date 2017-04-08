@@ -5,7 +5,6 @@
 
 #include <new>
 #include <iostream>
-#include <vector>
 #include <string.h>
 #include <iostream>
 #include <cmath>
@@ -144,6 +143,7 @@ public:
     {
         Matrix<ValueType> x(b);
         Matrix<ValueType> A(*this);
+
         for(int repetition = 0; repetition < 2; ++ repetition)
         {
             Matrix<ValueType> r(b - A * x);

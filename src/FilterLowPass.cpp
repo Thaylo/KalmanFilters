@@ -4,11 +4,12 @@
 
 /*------------------------------------------------------------------------------------------------*/
 void
-FilterLowPass::performFiltering(vector<float> &input)
+FilterLowPass::performFiltering(std::list<Matrix<float>> &inputList)
 {
-	for(int i = 0; i < dimensions; ++i)
+	auto input = inputList.front();
+	for(int i = 0; i < input.getNumberOfRows(); ++i)
 	{
-		currentState[i] = currentState[i] * alpha + input[i] * (1-alpha); 
+		currentState[i][0] = currentState[i][0] * alpha + input[i][0] * (1-alpha); 
 	}
 }
 

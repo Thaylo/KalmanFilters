@@ -7,34 +7,28 @@ class FilterDiscret :  public Filter
 {
 
 protected:
-	vector<float> currentState;	
+	Matrix<float> currentState;	
 
 public:
 	
 	FilterDiscret(int dim)
 	{
 		dimensions = dim;
-		for(int i = 0; i < dimensions; ++i)
-		{
-			currentState.push_back(0.0f);
-		}
-	}
+		currentState = Matrix<float>(dim, 1);
+	};
 
 
 	/*--------------------------------------------------------------------------------------------*/
 	void
-	inputValue(vector<float> &value)
+	inputValue(std::list<Matrix<float>> &inputList)
 	{
-		performFiltering(value);
-	}
+		performFiltering(inputList);
+	};
 
 
 
 	/*--------------------------------------------------------------------------------------------*/
-	void readValue(vector<float> &ret)
-	{
-		ret = currentState; 
-	}
+	virtual void readValue(Matrix<float> &ret) = 0;
 
 };
 

@@ -17,7 +17,13 @@ public:
 		alpha = alphaValue;
 	}
 
-	void performFiltering(vector<float> &input);
+	void performFiltering(std::list<Matrix<float>> &inputList);
+
+	virtual void readValue(Matrix<float> &ret)
+	{
+		ret = currentState;
+	}
+
 };
 
 

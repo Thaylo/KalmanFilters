@@ -11,28 +11,27 @@ int
 main(int argc, char **argv)
 {
 
-
-    LinearKalman f; // dimensionality and smoothness
-
-    vector<float> input;
-    vector<float> output;
-
+    LinearKalman f;
     int dim = f.getDimensionality();
-
-    for(int i = 0; i < dim; ++i)
-    {
-        input.push_back(1.0f);
-        output.push_back(0.0f);
-    }
     
+    Matrix<float> input(dim,1);
+    input[0][0] = 1.0f;
+
+    list<Matrix<float>> inputList;
+    inputList.push_back(input);
+
+    
+
+    Matrix<float> output(dim,1);
+
     f.readValue(output);
-    displayVector(output); 
+    cout << "Out = " << output << "\n"; 
 
     for(int i = 0; i < 20; ++i)
     {
-        f.inputValue(input);
+        f.inputValue(inputList);
         f.readValue(output);
-        displayVector(output);
+        cout << "Out = " << output << "\n";
     }
 
 
