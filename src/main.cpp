@@ -9,6 +9,8 @@ using namespace std;
 int 
 main(int argc, char **argv)
 {
+
+#if 0
     FilterLowPass f(2, 0.5); // dimensionality and smoothness
 
     vector<float> input;
@@ -31,30 +33,39 @@ main(int argc, char **argv)
         f.readValue(output);
         displayVector(output);
     }
+#endif
+
+    #define CTE 2000
 
 
-    #define CTE 2
+    Matrix<double> A(CTE,CTE);
+    Matrix<double> b(CTE,1);
 
-    cout << "Hello matrix!\n";
 
-    Matrix<float> A(CTE,CTE);
-    Matrix<float> B(CTE,1);
+    for(int i = 0; i < CTE; ++i)
+    {
+        b[i][0] = i;
 
-    double n = 0.25;
-    double theta = n * 2 * M_PI;
+        for(int j = 0; j < CTE; ++j)
+        {
+            
+            A[i][j] = exp(-fabs(2*(i-j)));
+            
+        }
+    }
 
-    A[0][0] = cos(theta);
-    A[0][1] = -sin(theta);
-    A[1][0] = sin(theta);
-    A[1][1] = cos(theta);
-    std::cout << A;
+    Matrix<double> x(b);
+    //cout << "A = " << A << "\n";
+    //cout << "b = " << b << "\n"; 
 
-    B[0][0] = 1;
-    B[1][0] = 1;
-    std::cout << B;
+ 
+    x = A.conjugateGradientSolver(b);
 
-    Matrix<float> C = A*B;
-    cout << C;
+    //cout << "x = " << x << "\n";
+
+    
+    //cout << "invA = ";
+    //cout << A.computeInverseBySolver() << "\n";
 
     return 0;
 
