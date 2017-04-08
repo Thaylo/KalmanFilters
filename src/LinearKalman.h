@@ -18,9 +18,13 @@ protected:
 		Equation for state observation:
 		Z(k) = C(k) X(k) + delta(k)
 
-			Note that epsilon and delta are represents process and measurement
+			Note that:
+			1) epsilon and delta represents movement and measurement
 		noise that are assumed to be independent and NORMALY DISTRIBUTED with
 		covariance R(t) and Q(t) respectively.
+			2) Given a state X, you will have a mean and a covariance matrix P,
+			namely SIGMA. To the best of our knowledge, 'P' stands for state covariance.
+
 
 	*/
 
