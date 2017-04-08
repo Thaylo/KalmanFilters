@@ -35,7 +35,7 @@ main(int argc, char **argv)
     }
 #endif
 
-    #define CTE 2000
+    #define CTE 6
 
 
     Matrix<double> A(CTE,CTE);
@@ -49,24 +49,28 @@ main(int argc, char **argv)
         for(int j = 0; j < CTE; ++j)
         {
             
-            A[i][j] = exp(-fabs(2*(i-j)));
+            A[i][j] = exp(-fabs(6*(i-j)));
             
         }
     }
 
     Matrix<double> x(b);
-    //cout << "A = " << A << "\n";
-    //cout << "b = " << b << "\n"; 
+    cout << "A = " << A << ";\n";
+    cout << "b = " << b << ";\n"; 
 
  
     x = A.conjugateGradientSolver(b);
 
-    //cout << "x = " << x << "\n";
+    cout << "x = " << x << ";\n";
 
     
-    //cout << "invA = ";
-    //cout << A.computeInverseBySolver() << "\n";
+    auto invA = A.computeInverseBySolver();
+    cout << "invA = ";
+    cout << invA << ";\n";
 
+
+    auto L = A.CholeskyLFactorization();
+    cout << "L = " << L << ";\n\n";
     return 0;
 
     

@@ -148,7 +148,7 @@ public:
         {
             Matrix<ValueType> r(b - A * x);
             Matrix<ValueType> p(r);
-            float rsold = r.dot(r);
+            double rsold = r.dot(r);
 
             Matrix<ValueType> Ap(b);
             int bColumns = b.getNumberOfColumns();
@@ -157,9 +157,9 @@ public:
             for(int i = 0; i < bColumns; ++i)
             {
                 Ap = A * p;
-                float alpha = rsold / p.dot(Ap);
+                double alpha = rsold / p.dot(Ap);
                 x = x + p * alpha;
-                float rsnew = r.dot(r);
+                double rsnew = r.dot(r);
                 if (sqrt(rsnew) < 1e-10)
                 {
                     break;
@@ -398,6 +398,45 @@ public:
 
 
 
+
+    /*--------------------------------------------------------------------------------------------*/
+    Matrix
+    CholeskyLFactorization() const
+    {
+        Matrix L( numColumns, numColumns );
+        Matrix A(*this);
+
+        for( int j = 0; j < numColumns; ++j )
+        {
+            double acumulator = 0.0f;
+
+            for(int k = 0; k < j - 1; ++ k)
+            {
+                acumulator += pow(L[j][k], 2.0);
+            }
+            
+            L[j][j] = sqrt(A[j][j] - acumulator); 
+        }
+
+        for( int j = 0; j < numColumns; ++j )
+        {
+            for( int i = j + 1; i < numColumns; ++i )
+            {
+                double acumulator = 0.0f;
+
+                for(int k = 0; k < j - 1; ++ k)
+                {
+                    acumulator += L[i][k]*L[j][k];
+                }
+                L[i][j] = (A[i][j] - acumulator)/L[j][j]; 
+            }
+        }
+
+        return L;
+    }
+
+
+
     /*--------------------------------------------------------------------------------------------*/
     double
     length()
@@ -436,20 +475,7 @@ public:
     }
 
 
-
-    /*--------------------------------------------------------------------------------------------*/
-    //Matrix
-    //inverse(Matrix<double> &A) const
-    //{
-    //    Matrix<double> invA = A;
-    //}
-
 };
-
-
-
-
-
 
 
     /*--------------------------------------------------------------------------------------------*/
