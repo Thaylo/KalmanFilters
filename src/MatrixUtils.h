@@ -143,6 +143,7 @@ public:
     {
         Matrix<ValueType> x(b);
         Matrix<ValueType> A(*this);
+        double rsnew;
 
         for(int repetition = 0; repetition < 2; ++ repetition)
         {
@@ -157,10 +158,15 @@ public:
             for(int i = 0; i < bColumns; ++i)
             {
                 Ap = A * p;
-                double alpha = rsold / p.dot(Ap);
+                double den = p.dot(Ap);
+                if (den < 1e-9)
+                {
+                    break;
+                }
+                double alpha = rsold / den;
                 x = x + p * alpha;
-                double rsnew = r.dot(r);
-                if (sqrt(rsnew) < 1e-10)
+                rsnew = r.dot(r);
+                if (sqrt(rsnew) < 1e-9)
                 {
                     break;
                 }
