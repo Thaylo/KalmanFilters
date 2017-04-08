@@ -145,7 +145,7 @@ public:
         Matrix<ValueType> A(*this);
         double rsnew;
 
-        for(int repetition = 0; repetition < 2; ++ repetition)
+        for(int repetition = 0; repetition < 10; ++ repetition)
         {
             Matrix<ValueType> r(b - A * x);
             Matrix<ValueType> p(r);
@@ -159,14 +159,14 @@ public:
             {
                 Ap = A * p;
                 double den = p.dot(Ap);
-                if (den < 1e-9)
+                if (den < 1e-7)
                 {
                     break;
                 }
                 double alpha = rsold / den;
                 x = x + p * alpha;
                 rsnew = r.dot(r);
-                if (sqrt(rsnew) < 1e-9)
+                if (sqrt(rsnew) < 1e-10)
                 {
                     break;
                 }
@@ -177,6 +177,69 @@ public:
         return x;
     }
 
+
+
+   /*--------------------------------------------------------------------------------------------*/
+    Matrix
+    Bicgstab(Matrix &b, int maxIter = 1)
+    {
+        Matrix A(*this);
+        Matrix x(b);
+        auto r0 = b - A*x;
+        Matrix r0Tilde(r0);
+        Matrix ri(r0);
+        
+
+        double rho, alpha, omega;
+        rho = alpha = omega = 1.0;
+
+        Matrix v(b.getNumberOfRows(),1);
+        Matrix p(b.getNumberOfRows(),1);
+
+        auto pastRi = ri;
+        auto pastRho = rho;
+        auto pastOmega = omega;
+        auto pastP = p;
+        auto pastV = v;
+        auto pastX = x;
+
+        for(int iter = 0; iter < maxIter; iter++)
+        {
+            rho = r0Tilde.dot(pastRi);
+            auto beta = (rho/pastRho)*(alpha/pastOmega);
+            p = pastRi + ( pastP - pastV * pastOmega) * beta;
+            v = A*p;
+            alpha = rho/r0Tilde.dot(v);
+            auto h = pastX + p*alpha;
+            
+            auto hres = b - A*h;
+            if(hres.dot(hres) < 1e-10)
+            {
+                return h;
+            }
+
+            auto s = pastRi - v * alpha;
+            auto t = A*s;
+            omega = t.dot(s)/t.dot(t);
+            
+            x = h + s * omega;
+
+            auto xres = b - A*x;
+            if(xres.dot(xres) < 1e-10)
+            {
+                return x;
+            }
+
+            ri = s - t*omega;
+
+            pastRi = ri;
+            pastRho = rho;
+            pastOmega = omega;
+            pastP = p;
+            pastV = v;
+            pastX = x;
+        }
+    }
 
 
     /*--------------------------------------------------------------------------------------------*/
