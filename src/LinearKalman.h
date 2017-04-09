@@ -37,14 +37,12 @@ protected:
 
 	Matrix<float> Q; // Q(lxl) is the covariance matrix of observation noise.
 	Matrix<float> R; // R(nxn) os tke covariance matrix of state evolution noise.
-	Matrix<float> S; // Is the Cross-covariance
 	Matrix<float> Sigma; // Sigma(nxn) State covariance, sometimes called P
 
 public:
 
 	LinearKalman( Matrix<float> initialState, Matrix<float> A_matrix, Matrix<float> B_matrix, 
-							Matrix<float> C_matrix, Matrix<float> Q_matrix, Matrix<float> R_matrix, 
-																			Matrix<float> S_matrix) 
+							Matrix<float> C_matrix, Matrix<float> Q_matrix, Matrix<float> R_matrix) 
 	: FilterDiscret(A_matrix.getNumberOfRows())
 	{
 		currentState = initialState;
@@ -53,7 +51,6 @@ public:
 		C = C_matrix;
 		Q = Q_matrix;
 		R = R_matrix;
-		S = S_matrix;
 		Sigma = Q;
 	};
 
@@ -64,7 +61,6 @@ public:
 		C = Matrix<float>(1,1);
 		Q = Matrix<float>(1,1);
 		R = Matrix<float>(1,1);
-		S = Matrix<float>(1,1);
 		Sigma = Q;
 
 	};

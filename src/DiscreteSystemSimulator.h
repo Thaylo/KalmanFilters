@@ -2,7 +2,10 @@
 #define DISCRETESYSTEMSIM_H
 
 #include "MatrixUtils.h"
+#include "ProbabilityDistributions.h"
 #include <list>
+
+using namespace std;
 
 class DiscreteSystem 
 {
@@ -19,9 +22,13 @@ public:
 	DiscreteSystem(Matrix<double> A_value, Matrix<double> B_value, Matrix<double> C_value, 
 																				 Matrix<double> X0);
 
-	void iterate(Matrix<double> U);
-	Matrix<double> observe();
-	std::list<Matrix<double>> logIterations(std::list<Matrix<double>> U);
+	void iterate(Matrix<double> U, bool isDisturbed, Matrix<double> noiseScale, double stdDev);
+	Matrix<double> observe(bool isDisturbed, Matrix<double> noiseScale, double stdDev);
+	list<Matrix<double>> logIterations(list<Matrix<double>> U, bool processDisturbed,
+										  		Matrix<double> processNoiseScale, double stdDevProc, 
+			 bool measurementDisturbed, Matrix<double> measurementNoiseScale, double stdDevMeasure); 
 };
+
+void DiscreteSystemTest();
 
 #endif /* DISCRETESYSTEMSIM_H */
