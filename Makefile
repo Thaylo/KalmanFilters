@@ -12,6 +12,7 @@ all: ${TARGET}
 clean:
 	rm $(OBJECTS)
 	rm $(TARGET)
+	rm script.m
 
 %.o: %.cpp
 	$(CC) -c $< $(CPPFLAGS)
