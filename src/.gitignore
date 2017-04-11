@@ -1,0 +1,6 @@
+*.o
+*~
+src/*.o
+bin/*
+./vscode
+./vscode/*

@@ -24,7 +24,7 @@ public:
 
 	void iterate(Matrix<double> U, bool isDisturbed, Matrix<double> noiseScale, double stdDev);
 	Matrix<double> observe(bool isDisturbed, Matrix<double> noiseScale, double stdDev);
-	list<Matrix<double>> logIterations(list<Matrix<double>> U, bool processDisturbed,
+	list<Matrix<double>> logSystemStates(list<Matrix<double>> U, bool processDisturbed,
 										  		Matrix<double> processNoiseScale, double stdDevProc, 
 			 bool measurementDisturbed, Matrix<double> measurementNoiseScale, double stdDevMeasure); 
 };

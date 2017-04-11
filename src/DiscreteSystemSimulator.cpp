@@ -36,6 +36,7 @@ DiscreteSystem::iterate(Matrix<double> U, bool isDisturbed, Matrix<double> noise
 		}
 		X = X + noiseScale;
 	}
+    
 }
 
 
@@ -68,7 +69,7 @@ DiscreteSystem::observe(bool isDisturbed, Matrix<double> noiseScale, double stdD
 
 /*-----------------------------------------------------------------------------------------------_*/
 list<Matrix<double>>
-DiscreteSystem::logIterations(list<Matrix<double>> U, bool isProcDisturbed,
+DiscreteSystem::logSystemStates(list<Matrix<double>> U, bool isProcDisturbed,
 										  		Matrix<double> processNoiseScale, double stdDevProc, 
 			    bool isMeasureDisturbed, Matrix<double> measurementNoiseScale, double stdDevMeasure) 
 																		   
@@ -153,12 +154,12 @@ DiscreteSystemTest()
 
 	bool isMeasurementNoiseActive = false;
     DiscreteSystem sys(A,B,C,X0);
-    auto realPositions     = sys.logIterations(inputs, isprocessNoiseActive, processNoiseScale, 
+    auto realPositions     = sys.logSystemStates(inputs, isprocessNoiseActive, processNoiseScale, 
        processNoiseStdDev, isMeasurementNoiseActive, measureMentNoiseScale, measureMentNoiseStdDev);
 
     isMeasurementNoiseActive = true;
     DiscreteSystem sys2(A,B,C,X0);
-	auto measuredPositions = sys2.logIterations(inputs, isprocessNoiseActive, processNoiseScale, 
+	auto measuredPositions = sys2.logSystemStates(inputs, isprocessNoiseActive, processNoiseScale, 
        processNoiseStdDev, isMeasurementNoiseActive, measureMentNoiseScale, measureMentNoiseStdDev);
 
 

@@ -12,7 +12,6 @@ all: ${TARGET}
 clean:
 	rm $(OBJECTS)
 	rm $(TARGET)
-	rm script.m
 
 %.o: %.cpp
 	$(CC) -c $< $(CPPFLAGS)
@@ -21,6 +20,8 @@ clean:
 	cd src
 
 $(TARGET): $(OBJECTS)
+	@echo "." > script.m
+	rm script.m
 	rm bin -rf
 	mkdir bin
 	@echo " Linking..."
