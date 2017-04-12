@@ -8,7 +8,7 @@ class Filter
 {
 protected:
 	int dimensions;
-	virtual void performFiltering(std::list<Matrix<float>> &inputList) = 0;
+	virtual void performFiltering(std::list<Matrix<double>> &inputList) = 0;
 
 public:
 
@@ -17,8 +17,8 @@ public:
 		return dimensions;
 	};
 
-	virtual void inputValue(std::list<Matrix<float>> &inputList) = 0;
-	virtual void readValue(Matrix<float> & z) = 0;
+	virtual void inputValue(std::list<Matrix<double>> &inputList) = 0;
+	virtual void readValue(Matrix<double> & z) = 0;
 
 };
 

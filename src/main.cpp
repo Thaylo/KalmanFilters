@@ -10,7 +10,6 @@
 using namespace std;
 
 
-
 /*------------------------------------------------------------------------------------------------*/
 int 
 main(int argc, char **argv)
@@ -57,15 +56,41 @@ main(int argc, char **argv)
     auto C = chargedParticleMatGenerator.getC();
     auto W = chargedParticleMatGenerator.getW();
     auto V = chargedParticleMatGenerator.getV();
-
+    auto Q = chargedParticleMatGenerator.getQ();
+    auto R = chargedParticleMatGenerator.getR();
+    
     DiscreteLTISystem ltiSys(A,B,C,X0);
 
     DisturbedInvariantDiscreteSystem disturbedSys;
     disturbedSys.configureSystem(A,B,C,X0,W,V);
     
-    auto realStates = disturbedSys.logSystemStates(inputs);
-    auto disturbedtMeasures = ltiSys.logSystemMeasures(realStates);
-    auto noisyMeasures = disturbedSys.logSystemMeasures(realStates);
+    auto realDisturbedStates = disturbedSys.logSystemStates(inputs);
+    auto disturbedtMeasures = ltiSys.logSystemMeasures(realDisturbedStates);
+    auto noisyMeasures = disturbedSys.logSystemMeasures(realDisturbedStates);
+
+    LinearKalman KF(X0, A, B, C, Q, R);
+    list<Matrix<double>> kalmanEstimatives;
+    list<Matrix<double>> outputFromKalmanFiltering;
+    
+
+    Matrix<double> Zret(2,1);
+    X0[0][0] = 0.1f;
+    X0[1][0] = 0;
+    list<Matrix<double>> inputListForKalmanFiltering;
+    
+    for(list<Matrix<double>>::iterator z = noisyMeasures.begin();
+                                                                z != noisyMeasures.end(); z++)
+    {
+        inputListForKalmanFiltering.push_back(U);
+        inputListForKalmanFiltering.push_back(*z);
+        
+        KF.inputValue(inputListForKalmanFiltering);
+        
+        KF.readValue(Zret);
+        
+        outputFromKalmanFiltering.push_back(Zret);
+    }
+
 
     int cnt = 0;
     cout << "disturbedtMeasures = [";
@@ -102,9 +127,26 @@ main(int argc, char **argv)
         }
     }
 
-    cout << "plot(t,disturbedtMeasures);\nhold on;\nplot3(t,noisyMeasures, \"-.\")\n";
-    cout << "legend(\"Posicao\", \"Posicao Medida\")\n";
-    cout << "print -dpdf particula.pdf";
+    cout << "outputFromKalmanFiltering = [" << endl;
+    cnt = 0;
+    for( auto e : outputFromKalmanFiltering)
+    { 
+        cnt++;
+        cout << e[0][0];
+        
+        if(cnt < maxIter+1)
+        {
+            cout << ", ";
+        }
+        else
+        {
+            cout << "];\n\n";
+        }
+    }
+
+    cout << "plot(t,disturbedtMeasures);\nhold on;\nplot3(t,noisyMeasures, \".\");\nplot3(t,outputFromKalmanFiltering, \"--\");\n";
+    cout << "legend(\"Posicao real do objeto\", \"Posicao dada pelo sensor ruidoso\", \"Posicao estimada pelo Kalman Filter\");\n";
+    cout << "print -dpdf particula.pdf\n";
 
     return 0;    
 }

@@ -30,21 +30,21 @@ protected:
 
 	*/
 	bool lowPassMode;
-	Matrix<float> A; // A(nxn) describes how X(k) evolves from X(k-1) without inputs.
-	Matrix<float> B; // B(nxl) describes how the control Uk changes the state from k-1 to k. 
-	Matrix<float> C; // C(kxl) describes how to map the state X(k) to an observation Z(k).
+	Matrix<double> A; // A(nxn) describes how X(k) evolves from X(k-1) without inputs.
+	Matrix<double> B; // B(nxl) describes how the control Uk changes the state from k-1 to k. 
+	Matrix<double> C; // C(kxl) describes how to map the state X(k) to an observation Z(k).
 	
 
-	Matrix<float> Q; // Q(lxl) is the covariance matrix of observation noise.
-	Matrix<float> R; // R(nxn) os tke covariance matrix of state evolution noise.
-	Matrix<float> Sigma; // Sigma(nxn) State covariance, sometimes called P
+	Matrix<double> Q; // Q(lxl) is the covariance matrix of observation noise.
+	Matrix<double> R; // R(nxn) os tke covariance matrix of state evolution noise.
+	Matrix<double> Sigma; // Sigma(nxn) State covariance, sometimes called P
 
-    void performFiltering(list<Matrix<float>> &inputList);
+    void performFiltering(list<Matrix<double>> &inputList);
     
 public:
 
-	LinearKalman( Matrix<float> initialState, Matrix<float> A_matrix, Matrix<float> B_matrix, 
-							Matrix<float> C_matrix, Matrix<float> Q_matrix, Matrix<float> R_matrix) 
+	LinearKalman( Matrix<double> initialState, Matrix<double> A_matrix, Matrix<double> B_matrix, 
+							Matrix<double> C_matrix, Matrix<double> Q_matrix, Matrix<double> R_matrix) 
 	: FilterDiscret(A_matrix.getNumberOfRows())
 	{
 		currentState = initialState;
@@ -56,30 +56,17 @@ public:
 		Sigma = Q;
 	};
 
-	LinearKalman() : FilterDiscret(1)
-	{
-		A = Matrix<float>(1,1);
-		B = Matrix<float>(1,1);
-		C = Matrix<float>(1,1);
-		Q = Matrix<float>(1,1);
-		R = Matrix<float>(1,1);
-		Sigma = Q;
-
-	};
-
     
 
-    void inputValue(list<Matrix<float>> &inputList);
+    void inputValue(list<Matrix<double>> &inputList);
 
-    void readValue(Matrix<float> &zk);
+    void readValue(Matrix<double> &zk);
 
-    void preditionStep(Matrix<float> U, Matrix<float> R, Matrix<float> &predictedMean, 
-                                                                       Matrix<float> &updatedSigma);
+    void preditionStep(Matrix<double> U, Matrix<double> R, Matrix<double> &predictedMean, 
+                                                                      Matrix<double> &updatedSigma);
 
-    void correctionStep(Matrix<float> predictedMean, Matrix<float> predictedSigma, Matrix<float> z, 
-    																			   Matrix<float> Q);
-
-
+    void correctionStep(Matrix<double> predictedMean, Matrix<double> predictedSigma, 
+                                                                Matrix<double> z, Matrix<double> Q);
 };
 
 

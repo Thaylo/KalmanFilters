@@ -4,7 +4,7 @@
 
 /*------------------------------------------------------------------------------------------------*/
 void
-FilterLowPass::performFiltering(std::list<Matrix<float>> &inputList)
+FilterLowPass::performFiltering(std::list<Matrix<double>> &inputList)
 {
 	auto input = inputList.front();
 	for(int i = 0; i < input.getNumberOfRows(); ++i)

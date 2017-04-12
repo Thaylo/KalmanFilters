@@ -3,41 +3,31 @@
 
 /*------------------------------------------------------------------------------------------------*/
 void
-LinearKalman::performFiltering(list<Matrix<float>> &inputList)
+LinearKalman::performFiltering(list<Matrix<double>> &inputList)
 {
-	if (inputList.size() == 1)
-	{
-		lowPassMode = true;
-		// Performs lowpass filter as fallback.
-		auto u = inputList.front();
-		float alpha = 0.2; // stup
-		for(int i = 0; i < u.getNumberOfRows(); ++i)
-		{
-			currentState[i][0] = currentState[i][0] * alpha + u[i][0] * (1-alpha); 
-		}	
-	}
-	else 
-	{
-		common_assert(inputList.size() == 2);
+    common_assert(inputList.size() == 2);
 
-		lowPassMode = false;
-		auto u = inputList.front();
-		auto z = inputList.back();
+    auto u = inputList.front(); 
+    inputList.pop_front();
 
-		Matrix<float> predictedMean(dimensions, 0);
-		Matrix<float> predictedSigma(dimensions, dimensions);
+    auto z = inputList.front();
+    inputList.pop_front();
 
-		preditionStep(u, R, predictedMean, predictedSigma);
-		correctionStep(predictedMean, predictedSigma, z, Q);
-	}
-	
+
+    Matrix<double> predictedMean(dimensions, 1);
+    Matrix<double> predictedSigma(dimensions, dimensions);
+
+
+    preditionStep(u, R, predictedMean, predictedSigma);
+    correctionStep(predictedMean, predictedSigma, z, Q);
+    
 }
 
 
 
 /*------------------------------------------------------------------------------------------------*/
 void
-LinearKalman::inputValue(list<Matrix<float>> &inputList)
+LinearKalman::inputValue(list<Matrix<double>> &inputList)
 {
 	performFiltering(inputList);
 }
@@ -46,42 +36,38 @@ LinearKalman::inputValue(list<Matrix<float>> &inputList)
 
 /*------------------------------------------------------------------------------------------------*/
 void
-LinearKalman::readValue(Matrix<float> &zk)
+LinearKalman::readValue(Matrix<double> &zk)
 {
-	if(lowPassMode)
-	{
-		zk = currentState;
-	}
-	else
-	{
-		zk = C*currentState;
-	}
-	
+    zk = C*currentState;
 }
 
 
 
 /*------------------------------------------------------------------------------------------------*/
 void
-LinearKalman::preditionStep(Matrix<float> U, Matrix<float> R, Matrix<float> &predictedMean, 
-																		Matrix<float> &updatedSigma)
+LinearKalman::preditionStep(Matrix<double> U, Matrix<double> R, Matrix<double> &predictedMean, 
+																	 Matrix<double> &predictedSigma)
 {
 	predictedMean = A*currentState + B*U;
-	updatedSigma = A*Sigma*A.transpose() + R;
+	predictedSigma = A*Sigma*A.transpose() + Q;
 }
 
 
 
 /*------------------------------------------------------------------------------------------------*/
 void
-LinearKalman::correctionStep(Matrix<float> predictedMean, Matrix<float> predictedSigma, 
-	  															   Matrix<float> z, Matrix<float> Q)
+LinearKalman::correctionStep(Matrix<double> predictedMean, Matrix<double> predictedSigma, 
+	  															 Matrix<double> z, Matrix<double> Q)
 {
-	Matrix<float> Ct(C.transpose());
 
-	Matrix<float> K = predictedSigma*Ct*(C*predictedSigma*Ct + Q).computeInverseBySolver();
+	Matrix<double> Ct(C.transpose());
+
+
+	Matrix<double> K = predictedSigma*Ct*(C*predictedSigma*Ct + R).computeInverseBySolver();
+
+
 	currentState = predictedMean + K*(z - C*predictedMean); // Correct State
-	auto aux = K * C;
-	auto I = aux.identityMatrix(aux.getNumberOfColumns()); // Implementar eye(dim) igual ao matlab.
-	Sigma = (I - aux) * predictedSigma; // Correct Sigma
+	auto KC = K * C;
+	auto I = KC.identityMatrix(KC.getNumberOfColumns()); // Implementar eye(dim) igual ao matlab.
+	Sigma = (I - KC) * predictedSigma; // Correct Sigma
 }
