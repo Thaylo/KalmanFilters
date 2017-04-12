@@ -39,6 +39,8 @@ protected:
 	Matrix<float> R; // R(nxn) os tke covariance matrix of state evolution noise.
 	Matrix<float> Sigma; // Sigma(nxn) State covariance, sometimes called P
 
+    void performFiltering(list<Matrix<float>> &inputList);
+    
 public:
 
 	LinearKalman( Matrix<float> initialState, Matrix<float> A_matrix, Matrix<float> B_matrix, 
@@ -65,7 +67,7 @@ public:
 
 	};
 
-    void performFiltering(list<Matrix<float>> &inputList);
+    
 
     void inputValue(list<Matrix<float>> &inputList);
 

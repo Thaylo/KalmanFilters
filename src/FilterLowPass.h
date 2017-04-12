@@ -9,7 +9,8 @@ class  FilterLowPass : public FilterDiscret
 protected:
 
 	float alpha; // smoothness
-
+    void performFiltering(std::list<Matrix<float>> &inputList);
+    
 public:
 	
 	FilterLowPass(int dim = 1, float alphaValue = 0.5) : FilterDiscret(dim)
@@ -17,7 +18,7 @@ public:
 		alpha = alphaValue;
 	}
 
-	void performFiltering(std::list<Matrix<float>> &inputList);
+	
 
 	virtual void readValue(Matrix<float> &ret)
 	{

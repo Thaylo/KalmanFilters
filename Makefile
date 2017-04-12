@@ -1,6 +1,6 @@
 STD :=c++17
 SRCDIR := src
-CPPFLAGS= -std=$(STD) -O3 -DDEBUG
+CPPFLAGS= -std=$(STD) -O3 -DDEBUG -Wall
 CC=g++-5
 TARGET := bin/filtering
 SRCEXT := cpp
