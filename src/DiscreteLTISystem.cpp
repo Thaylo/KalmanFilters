@@ -12,7 +12,7 @@ DiscreteLTISystem::DiscreteLTISystem()
 
 
 /*-----------------------------------------------------------------------------------------------_*/
-DiscreteLTISystem::DiscreteLTISystem(const Matrix<double> &A_value, const Matrix<double> &B_value, 
+DiscreteLTISystem::DiscreteLTISystem(const Matrix<double> &A_value, const Matrix<double> &B_value,
                                       const Matrix<double> &C_value, const Matrix<double> &X0_value)
 {
     A = A_value;
@@ -55,11 +55,10 @@ DiscreteLTISystem::observe()
 
 /*-----------------------------------------------------------------------------------------------_*/
 list<Matrix<double>>
-DiscreteLTISystem::logSystemStates(list<Matrix<double>> &U) 																	   
+DiscreteLTISystem::logSystemStates(list<Matrix<double>> &U)
 {
 	list<Matrix<double>> outputs;
     Matrix<double> stub;
-	outputs.push_back(X);
 
 	for(auto u : U)
 	{
@@ -74,11 +73,11 @@ DiscreteLTISystem::logSystemStates(list<Matrix<double>> &U)
 
 /*-----------------------------------------------------------------------------------------------_*/
 list<Matrix<double>>
-DiscreteLTISystem::logSystemMeasures(list<Matrix<double>> &states) 
-																		   
+DiscreteLTISystem::logSystemMeasures(list<Matrix<double>> &states)
+
 {
 	list<Matrix<double>> measures;
-    
+
 	for(auto s : states)
 	{
 		measures.push_back(C*s);
@@ -94,14 +93,14 @@ DiscreteLTISystemTest()
 {
 	int maxIter = 100;
     double timeStep = 1.34/maxIter;
-    
+
     double timeElapsed = 0;
     cout << "t = [";
     for( int i = 0; i < maxIter+1; ++i)
-    { 
-        
+    {
+
         cout << timeElapsed;
-        
+
         if(i < maxIter)
         {
             cout << ", ";
@@ -119,7 +118,7 @@ DiscreteLTISystemTest()
     A[0][1] = timeStep;
     A[1][0] = 0;
     A[1][1] = 1;
-    
+
     Matrix<double> B(2,1);
     B[0][0] = timeStep * timeStep / 2;
     B[1][0] = timeStep;
@@ -149,10 +148,10 @@ DiscreteLTISystemTest()
     int cnt = 0;
     cout << "z = [";
     for( auto e : measurements)
-    { 
+    {
         cnt++;
         cout << e[0][0];
-        
+
         if(cnt < maxIter+1)
         {
             cout << ", ";

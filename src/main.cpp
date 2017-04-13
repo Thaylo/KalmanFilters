@@ -11,19 +11,19 @@ using namespace std;
 
 
 /*------------------------------------------------------------------------------------------------*/
-int 
+int
 main(int argc, char **argv)
 {
+    double maxTime = 1.34;
+    int maxIter = 200;
+    double timeStep = maxTime/maxIter;
 
-    int maxIter = 100;
-    double timeStep = 1.34/maxIter;
-    
     double timeElapsed = 0;
     cout << "t = [";
-    for( int i = 0; i < maxIter+1; ++i)
-    { 
+    for( int i = 1; i <= maxIter; ++i)
+    {
         cout << timeElapsed;
-        
+
         if(i < maxIter)
         {
             cout << ", ";
@@ -36,21 +36,11 @@ main(int argc, char **argv)
         timeElapsed += timeStep;
     }
 
-    Matrix<double> U(1,1);
-    U[0][0] = 1;
 
-    list<Matrix<double>> inputs;
-    for(int i = 0; i < maxIter; ++i)
-    {
-        inputs.push_back(U);
-    }
-
-    Matrix<double> X0(2,1);
-    X0[0][0] = 0.1f;
-    X0[1][0] = 0;
 
     ChargedParticleMatrixGenerator chargedParticleMatGenerator(timeStep);
 
+    auto X0 = chargedParticleMatGenerator.getX0();
     auto A = chargedParticleMatGenerator.getA();
     auto B = chargedParticleMatGenerator.getB();
     auto C = chargedParticleMatGenerator.getC();
@@ -58,48 +48,58 @@ main(int argc, char **argv)
     auto V = chargedParticleMatGenerator.getV();
     auto Q = chargedParticleMatGenerator.getQ();
     auto R = chargedParticleMatGenerator.getR();
-    
-    DiscreteLTISystem ltiSys(A,B,C,X0);
 
+    DiscreteLTISystem ltiSys(A,B,C,X0);
     DisturbedInvariantDiscreteSystem disturbedSys;
     disturbedSys.configureSystem(A,B,C,X0,W,V);
-    
-    auto realDisturbedStates = disturbedSys.logSystemStates(inputs);
+
+    list<Matrix<double>> U;
+    Matrix<double> u(1,1);
+
+    for(int i = 0; i < maxIter; ++i)
+    {
+        u[0][0] = 10*cos(6*M_PI*timeElapsed/maxTime);
+        U.push_back(u);
+        timeElapsed += timeStep;
+    }
+
+    auto realDisturbedStates = disturbedSys.logSystemStates(U);
+
     auto disturbedtMeasures = ltiSys.logSystemMeasures(realDisturbedStates);
     auto noisyMeasures = disturbedSys.logSystemMeasures(realDisturbedStates);
 
     LinearKalman KF(X0, A, B, C, Q, R);
     list<Matrix<double>> kalmanEstimatives;
     list<Matrix<double>> outputFromKalmanFiltering;
-    
+
 
     Matrix<double> Zret(2,1);
-    X0[0][0] = 0.1f;
-    X0[1][0] = 0;
-    list<Matrix<double>> inputListForKalmanFiltering;
-    
-    for(list<Matrix<double>>::iterator z = noisyMeasures.begin();
-                                                                z != noisyMeasures.end(); z++)
+    list<Matrix<double>>::iterator uIt = U.begin();
+
+    list<Matrix<double>> kInputs;
+
+
+    for(list<Matrix<double>>::iterator zIt = noisyMeasures.begin(); zIt != noisyMeasures.end();
+                                                                                       zIt++, uIt++)
     {
-        inputListForKalmanFiltering.push_back(U);
-        inputListForKalmanFiltering.push_back(*z);
-        
-        KF.inputValue(inputListForKalmanFiltering);
-        
+        common_assert(uIt != U.end());
+        kInputs.push_back(*uIt);
+        kInputs.push_back(*zIt);
+
+        KF.inputValue(kInputs);
         KF.readValue(Zret);
-        
+
         outputFromKalmanFiltering.push_back(Zret);
     }
-
 
     int cnt = 0;
     cout << "disturbedtMeasures = [";
     for( auto e : disturbedtMeasures)
-    { 
+    {
         cnt++;
         cout << e[0][0];
-        
-        if(cnt < maxIter+1)
+
+        if(cnt < maxIter)
         {
             cout << ", ";
         }
@@ -113,11 +113,11 @@ main(int argc, char **argv)
     cout << "noisyMeasures = [" << endl;
     cnt = 0;
     for( auto e : noisyMeasures)
-    { 
+    {
         cnt++;
         cout << e[0][0];
-        
-        if(cnt < maxIter+1)
+
+        if(cnt < maxIter)
         {
             cout << ", ";
         }
@@ -130,11 +130,11 @@ main(int argc, char **argv)
     cout << "outputFromKalmanFiltering = [" << endl;
     cnt = 0;
     for( auto e : outputFromKalmanFiltering)
-    { 
+    {
         cnt++;
         cout << e[0][0];
-        
-        if(cnt < maxIter+1)
+
+        if(cnt < maxIter)
         {
             cout << ", ";
         }
@@ -144,9 +144,9 @@ main(int argc, char **argv)
         }
     }
 
-    cout << "plot(t,disturbedtMeasures);\nhold on;\nplot3(t,noisyMeasures, \".\");\nplot3(t,outputFromKalmanFiltering, \"--\");\n";
+    cout << "plot(t,disturbedtMeasures);\nhold on;\nplot3(t,noisyMeasures, \".-\");\nplot3(t,outputFromKalmanFiltering, \"--\");\n";
     cout << "legend(\"Posicao real do objeto\", \"Posicao dada pelo sensor ruidoso\", \"Posicao estimada pelo Kalman Filter\");\n";
     cout << "print -dpdf particula.pdf\n";
 
-    return 0;    
+    return 0;
 }

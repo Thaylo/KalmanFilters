@@ -10,6 +10,8 @@ private:
 
 public:
     ChargedParticleMatrixGenerator(double timeStep = 1.0);
+
+    Matrix<double> getX0();
     Matrix<double> getA();
     Matrix<double> getB();
     Matrix<double> getC();
@@ -17,6 +19,7 @@ public:
     Matrix<double> getV();
     Matrix<double> getQ();
     Matrix<double> getR();
+
 };
 
 #endif /* CPMG_H */

@@ -53,7 +53,7 @@ public:
 		C = C_matrix;
 		Q = Q_matrix;
 		R = R_matrix;
-		Sigma = Q;
+        Sigma = Q;
 	};
 
     
@@ -62,10 +62,10 @@ public:
 
     void readValue(Matrix<double> &zk);
 
-    void preditionStep(Matrix<double> U, Matrix<double> R, Matrix<double> &predictedMean, 
+    void preditionStep(Matrix<double> U, Matrix<double> R, Matrix<double> &predictedMean,
                                                                       Matrix<double> &updatedSigma);
 
-    void correctionStep(Matrix<double> predictedMean, Matrix<double> predictedSigma, 
+    void correctionStep(Matrix<double> predictedMean, Matrix<double> predictedSigma,
                                                                 Matrix<double> z, Matrix<double> Q);
 };
 

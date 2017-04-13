@@ -7,7 +7,7 @@ LinearKalman::performFiltering(list<Matrix<double>> &inputList)
 {
     common_assert(inputList.size() == 2);
 
-    auto u = inputList.front(); 
+    auto u = inputList.front();
     inputList.pop_front();
 
     auto z = inputList.front();
@@ -20,7 +20,7 @@ LinearKalman::performFiltering(list<Matrix<double>> &inputList)
 
     preditionStep(u, R, predictedMean, predictedSigma);
     correctionStep(predictedMean, predictedSigma, z, Q);
-    
+
 }
 
 
@@ -45,7 +45,7 @@ LinearKalman::readValue(Matrix<double> &zk)
 
 /*------------------------------------------------------------------------------------------------*/
 void
-LinearKalman::preditionStep(Matrix<double> U, Matrix<double> R, Matrix<double> &predictedMean, 
+LinearKalman::preditionStep(Matrix<double> U, Matrix<double> R, Matrix<double> &predictedMean,
 																	 Matrix<double> &predictedSigma)
 {
 	predictedMean = A*currentState + B*U;
@@ -56,7 +56,7 @@ LinearKalman::preditionStep(Matrix<double> U, Matrix<double> R, Matrix<double> &
 
 /*------------------------------------------------------------------------------------------------*/
 void
-LinearKalman::correctionStep(Matrix<double> predictedMean, Matrix<double> predictedSigma, 
+LinearKalman::correctionStep(Matrix<double> predictedMean, Matrix<double> predictedSigma,
 	  															 Matrix<double> z, Matrix<double> Q)
 {
 

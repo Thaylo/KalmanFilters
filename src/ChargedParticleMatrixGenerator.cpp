@@ -1,7 +1,8 @@
 #include "ChargedParticleMatrixGenerator.h"
 
-#define POSITIONNOISE 0.001
-#define MEASURENOISE 0.05
+#define POSITIONNOISESTDEV 0.002
+#define SPEEDNOISESTDDEV 0.001
+#define MEASURENOISESTDDEV 0.04
 
 
 
@@ -25,6 +26,19 @@ ChargedParticleMatrixGenerator::getA()
     A[1][1] = 1;
 
     return A;
+}
+
+
+
+/*------------------------------------------------------------------------------------------------*/
+Matrix<double>
+ChargedParticleMatrixGenerator::getX0()
+{
+    Matrix<double> X0(2,1);
+
+    X0[0][0] = 0.1;
+
+    return X0;
 }
 
 
@@ -63,8 +77,8 @@ ChargedParticleMatrixGenerator::getW()
 {
     Matrix<double>processNoiseStdDev(2,1);
 
-    processNoiseStdDev[0][0] = POSITIONNOISE/2;
-    processNoiseStdDev[1][0] = (POSITIONNOISE/2)*dt;
+    processNoiseStdDev[0][0] = POSITIONNOISESTDEV;
+    processNoiseStdDev[1][0] = SPEEDNOISESTDDEV;
 
     return processNoiseStdDev;
 }
@@ -77,7 +91,7 @@ ChargedParticleMatrixGenerator::getV()
 {
     Matrix<double>measurementNoiseStdDev(1,1);
 
-    measurementNoiseStdDev[0][0] = MEASURENOISE;
+    measurementNoiseStdDev[0][0] = MEASURENOISESTDDEV;
 
     return measurementNoiseStdDev;
 }
@@ -89,10 +103,10 @@ Matrix<double>
 ChargedParticleMatrixGenerator::getQ()
 {
     Matrix<double>Q(2,2);
-    
-    Q[0][0] = pow(POSITIONNOISE, 2);
-    Q[1][1] = pow((POSITIONNOISE/2)/dt, 2);
-    
+
+    Q[0][0] = pow(POSITIONNOISESTDEV, 2);
+    Q[1][1] = pow(SPEEDNOISESTDDEV, 2);
+
     return Q;
 }
 
@@ -103,9 +117,9 @@ Matrix<double>
 ChargedParticleMatrixGenerator::getR()
 {
     Matrix<double>R(1,1);
-    
-    R[0][0] = pow(MEASURENOISE, 2);
-    
+
+    R[0][0] = pow(MEASURENOISESTDDEV, 2);
+
     return R;
 }
 

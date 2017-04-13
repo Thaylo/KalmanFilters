@@ -3,7 +3,7 @@
 
 /*------------------------------------------------------------------------------------------------*/
 void
-DisturbedInvariantDiscreteSystem::configureSystem(const Matrix<double> &A_value, 
+DisturbedInvariantDiscreteSystem::configureSystem(const Matrix<double> &A_value,
        const Matrix<double> &B_value, const Matrix<double> &C_value, const Matrix<double> &X0_value,
                              const Matrix<double> WstdDev_value, const Matrix<double> VstdDev_value)
 {
@@ -24,8 +24,8 @@ DisturbedInvariantDiscreteSystem::configureSystem(const Matrix<double> &A_value,
 void
 DisturbedInvariantDiscreteSystem::evolve(const Matrix<double> &U)
 {
-    int numRows = WstdDev.getNumberOfRows(); 
-    int numColumns = WstdDev.getNumberOfColumns(); 
+    int numRows = WstdDev.getNumberOfRows();
+    int numColumns = WstdDev.getNumberOfColumns();
     Matrix<double> noise(numRows, numColumns);
 
     for(int i = 0; i < numRows; ++i)
@@ -45,8 +45,8 @@ DisturbedInvariantDiscreteSystem::evolve(const Matrix<double> &U)
 Matrix<double>
 DisturbedInvariantDiscreteSystem::observe()
 {
-    int numRows = VstdDev.getNumberOfRows(); 
-    int numColumns = VstdDev.getNumberOfColumns(); 
+    int numRows = VstdDev.getNumberOfRows();
+    int numColumns = VstdDev.getNumberOfColumns();
     auto noise = Matrix<double>(numRows, numColumns);
 
     for(int i = 0; i < numRows; ++i)
@@ -67,8 +67,8 @@ DisturbedInvariantDiscreteSystem::observe()
 Matrix<double>
 DisturbedInvariantDiscreteSystem::observe(Matrix<double> &state)
 {
-    int numRows = VstdDev.getNumberOfRows(); 
-    int numColumns = VstdDev.getNumberOfColumns(); 
+    int numRows = VstdDev.getNumberOfRows();
+    int numColumns = VstdDev.getNumberOfColumns();
     auto noise = Matrix<double>(numRows, numColumns);
 
     for(int i = 0; i < numRows; ++i)
@@ -84,13 +84,10 @@ DisturbedInvariantDiscreteSystem::observe(Matrix<double> &state)
 
 
 list<Matrix<double>>
-DisturbedInvariantDiscreteSystem::logSystemStates(list<Matrix<double>> &U) 
-																		   
-{
+DisturbedInvariantDiscreteSystem::logSystemStates(list<Matrix<double>> &U)
 {
 	list<Matrix<double>> outputs;
     Matrix<double> stub;
-	outputs.push_back(X);
 
 	for(auto u : U)
 	{
@@ -100,7 +97,6 @@ DisturbedInvariantDiscreteSystem::logSystemStates(list<Matrix<double>> &U)
 
 	return outputs;
 }
-}
 
 
 
@@ -109,8 +105,8 @@ list<Matrix<double>>
 DisturbedInvariantDiscreteSystem::logSystemMeasures(list<Matrix<double>> &states)
 {
     list<Matrix<double>> measures;
-    
-    for( e : states)
+
+    for( auto e : states)
     {
         measures.push_back(this->observe(e));
     }
@@ -125,14 +121,14 @@ DisturbedInvariantDiscreteSystemTest()
 {
 	int maxIter = 100;
     double timeStep = 1.34/maxIter;
-    
+
 
     double timeElapsed = 0;
     cout << "t = [";
     for( int i = 0; i < maxIter+1; ++i)
-    { 
+    {
         cout << timeElapsed;
-        
+
         if(i < maxIter)
         {
             cout << ", ";
@@ -145,7 +141,7 @@ DisturbedInvariantDiscreteSystemTest()
         timeElapsed += timeStep;
     }
 
-    
+
 
     Matrix<double> U(1,1);
     U[0][0] = 1;
@@ -179,10 +175,10 @@ DisturbedInvariantDiscreteSystemTest()
     int cnt = 0;
     cout << "z = [";
     for( auto e : realPositions)
-    { 
+    {
         cnt++;
         cout << e[0][0];
-        
+
         if(cnt < maxIter+1)
         {
             cout << ", ";
@@ -196,10 +192,10 @@ DisturbedInvariantDiscreteSystemTest()
     cnt = 0;
     cout << "zDisturbed = [";
     for( auto e : measuredPositions)
-    { 
+    {
         cnt++;
         cout << e[0][0];
-        
+
         if(cnt < maxIter+1)
         {
             cout << ", ";
@@ -209,7 +205,7 @@ DisturbedInvariantDiscreteSystemTest()
             cout << "];\n\n";
         }
     }
-    
+
     cout << "plot(t,z, \"--\");\nhold on;\nplot3(t,zDisturbed, \"-.\")\n";
     cout << "legend(\"Posicao da particula\")\n";
     cout << "print -dpdf foo.pdf";
