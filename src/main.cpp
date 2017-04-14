@@ -1,9 +1,7 @@
 #include "LinearKalman.h"
-#include "FilterLowPass.h"
 #include "MatrixUtils.h"
 #include "DiscreteLTISystem.h"
 #include "DisturbedInvariantDiscreteSystem.h"
-#include "ProbabilityDistributions.h"
 #include "ChargedParticleMatrixGenerator.h"
 #include <list>
 
@@ -15,7 +13,7 @@ int
 main(int argc, char **argv)
 {
     double maxTime = 1.34;
-    int maxIter = 200;
+    int maxIter = 300;
     double timeStep = maxTime/maxIter;
 
     double timeElapsed = 0;
@@ -58,7 +56,7 @@ main(int argc, char **argv)
 
     for(int i = 0; i < maxIter; ++i)
     {
-        u[0][0] = 10*cos(6*M_PI*timeElapsed/maxTime);
+        u[0][0] = cos(6*M_PI*timeElapsed/maxTime);
         U.push_back(u);
         timeElapsed += timeStep;
     }

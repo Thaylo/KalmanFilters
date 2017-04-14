@@ -1,8 +1,8 @@
 #include "ChargedParticleMatrixGenerator.h"
 
-#define POSITIONNOISESTDEV 0.002
-#define SPEEDNOISESTDDEV 0.001
-#define MEASURENOISESTDDEV 0.04
+#define POSITIONNOISESTDEV 0.0
+#define SPEEDNOISESTDDEV 0.01/3
+#define MEASURENOISESTDDEV 0.01/3
 
 
 
