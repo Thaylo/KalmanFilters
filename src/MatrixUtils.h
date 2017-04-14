@@ -143,27 +143,27 @@ public:
     {
         Matrix<ValueType> x(b);
         Matrix<ValueType> A(*this);
-        double rsnew;
+        ValueType rsnew;
 
         for(int repetition = 0; repetition < 10; ++ repetition)
         {
             Matrix<ValueType> r(b - A * x);
             Matrix<ValueType> p(r);
-            double rsold = r.dot(r);
+            ValueType rsold = r.dot(r);
 
             Matrix<ValueType> Ap(b);
             int bColumns = b.getNumberOfColumns();
 
-        
+
             for(int i = 0; i < bColumns; ++i)
             {
                 Ap = A * p;
-                double den = p.dot(Ap);
+                ValueType den = p.dot(Ap);
                 if (den < 1e-7)
                 {
                     break;
                 }
-                double alpha = rsold / den;
+                ValueType alpha = rsold / den;
                 x = x + p * alpha;
                 rsnew = r.dot(r);
                 if (sqrt(rsnew) < 1e-10)
@@ -188,9 +188,9 @@ public:
         auto r0 = b - A*x;
         Matrix r0Tilde(r0);
         Matrix ri(r0);
-        
 
-        double rho, alpha, omega;
+
+        ValueType rho, alpha, omega;
         rho = alpha = omega = 1.0;
 
         Matrix v(b.getNumberOfRows(),1);
@@ -211,7 +211,7 @@ public:
             v = A*p;
             alpha = rho/r0Tilde.dot(v);
             auto h = pastX + p*alpha;
-            
+
             auto hres = b - A*h;
             if(hres.dot(hres) < 1e-10)
             {
@@ -221,7 +221,7 @@ public:
             auto s = pastRi - v * alpha;
             auto t = A*s;
             omega = t.dot(s)/t.dot(t);
-            
+
             x = h + s * omega;
 
             auto xres = b - A*x;
@@ -292,8 +292,8 @@ public:
             identityColumn[i][0] = 0.0f;
             inverse = inverse.concatenateColumns(inverseColumn);
         }
-        
-        return inverse;        
+
+        return inverse;
     }
 
 
@@ -427,7 +427,7 @@ public:
 
     /*--------------------------------------------------------------------------------------------*/
     Matrix
-    operator*( const double lambda )
+    operator*( const ValueType lambda )
     {
         Matrix m( numRows, numColumns );
 
@@ -447,7 +447,7 @@ public:
 
     /*--------------------------------------------------------------------------------------------*/
     Matrix
-    operator/( const double lambda )
+    operator/( const ValueType lambda )
     {
         Matrix m( numRows, numColumns );
 
@@ -493,27 +493,27 @@ public:
 
         for( int j = 0; j < numColumns; ++j )
         {
-            double acumulator = 0.0f;
+            ValueType acumulator = 0.0f;
 
             for(int k = 0; k < j - 1; ++ k)
             {
                 acumulator += pow(L[j][k], 2.0);
             }
-            
-            L[j][j] = sqrt(A[j][j] - acumulator); 
+
+            L[j][j] = sqrt(A[j][j] - acumulator);
         }
 
         for( int j = 0; j < numColumns; ++j )
         {
             for( int i = j + 1; i < numColumns; ++i )
             {
-                double acumulator = 0.0f;
+                ValueType acumulator = 0.0f;
 
                 for(int k = 0; k < j - 1; ++ k)
                 {
                     acumulator += L[i][k]*L[j][k];
                 }
-                L[i][j] = (A[i][j] - acumulator)/L[j][j]; 
+                L[i][j] = (A[i][j] - acumulator)/L[j][j];
             }
         }
 
@@ -553,7 +553,7 @@ public:
 
 
     /*--------------------------------------------------------------------------------------------*/
-    double
+    ValueType
     dot( const Matrix &B )
     {
         return (this->transpose()*B)[0][0];
@@ -586,7 +586,7 @@ public:
             }
         }
         os << "\n";
-        
+
         return os;
     }
 

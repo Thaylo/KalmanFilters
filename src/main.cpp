@@ -12,17 +12,18 @@ using namespace std;
 int
 main(int argc, char **argv)
 {
-    double maxTime = 1.34;
-    int maxIter = 300;
-    double timeStep = maxTime/maxIter;
+
+    int maxIter = 70;
+    double timeStep = 1/30.0;
+    double maxTime = maxIter*timeStep;
 
     double timeElapsed = 0;
     cout << "t = [";
-    for( int i = 1; i <= maxIter; ++i)
+    for( int i = 0; i < maxIter; ++i)
     {
         cout << timeElapsed;
 
-        if(i < maxIter)
+        if(i < maxIter - 1)
         {
             cout << ", ";
         }
@@ -56,7 +57,7 @@ main(int argc, char **argv)
 
     for(int i = 0; i < maxIter; ++i)
     {
-        u[0][0] = cos(6*M_PI*timeElapsed/maxTime);
+        u[0][0] = 0.5*cos(6*M_PI*timeElapsed/maxTime);
         U.push_back(u);
         timeElapsed += timeStep;
     }
@@ -65,6 +66,10 @@ main(int argc, char **argv)
 
     auto disturbedtMeasures = ltiSys.logSystemMeasures(realDisturbedStates);
     auto noisyMeasures = disturbedSys.logSystemMeasures(realDisturbedStates);
+
+    // Iniciando o filtro com valores errados
+    X0[0][0] = -1;
+    X0[1][0] = -0.1;
 
     LinearKalman KF(X0, A, B, C, Q, R);
     list<Matrix<double>> kalmanEstimatives;

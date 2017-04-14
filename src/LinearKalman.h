@@ -31,20 +31,20 @@ protected:
 	*/
 	bool lowPassMode;
 	Matrix<double> A; // A(nxn) describes how X(k) evolves from X(k-1) without inputs.
-	Matrix<double> B; // B(nxl) describes how the control Uk changes the state from k-1 to k. 
+	Matrix<double> B; // B(nxl) describes how the control Uk changes the state from k-1 to k.
 	Matrix<double> C; // C(kxl) describes how to map the state X(k) to an observation Z(k).
-	
+
 
 	Matrix<double> Q; // Q(lxl) is the covariance matrix of observation noise.
 	Matrix<double> R; // R(nxn) os tke covariance matrix of state evolution noise.
 	Matrix<double> Sigma; // Sigma(nxn) State covariance, sometimes called P
 
     void performFiltering(list<Matrix<double>> &inputList);
-    
+
 public:
 
-	LinearKalman( Matrix<double> initialState, Matrix<double> A_matrix, Matrix<double> B_matrix, 
-							Matrix<double> C_matrix, Matrix<double> Q_matrix, Matrix<double> R_matrix) 
+	LinearKalman( Matrix<double> initialState, Matrix<double> A_matrix, Matrix<double> B_matrix,
+							Matrix<double> C_matrix, Matrix<double> Q_matrix, Matrix<double> R_matrix)
 	: FilterDiscret(A_matrix.getNumberOfRows())
 	{
 		currentState = initialState;
@@ -53,10 +53,10 @@ public:
 		C = C_matrix;
 		Q = Q_matrix;
 		R = R_matrix;
-        Sigma = Q;
+        Sigma = Q*1000;
 	};
 
-    
+
 
     void inputValue(list<Matrix<double>> &inputList);
 
