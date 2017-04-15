@@ -1,8 +1,5 @@
 git clone https://github.com/Thaylo/TMatrix.git
-mv TMatrix/*.h .
-reset
+mv TMatrix/*.h ./src
 make clean -i
 make
-./bin/filtering > script.m
-octave script.m
 rm TMatrix -rf
