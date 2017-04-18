@@ -1,7 +1,7 @@
 #include "ChargedParticleMatrixGenerator.h"
 
-#define POSITIONNOISESTDEV 0.005
-#define SPEEDNOISESTDDEV 0.002
+#define POSITIONNOISESTDEV 0.002
+#define SPEEDNOISESTDDEV 0.0
 #define MEASURENOISESTDDEV 0.01
 
 
@@ -64,7 +64,7 @@ ChargedParticleMatrixGenerator::getC()
     Matrix<double> C(1,2);
 
     C[0][0] = 1;
-    C[0][1] = 1;
+    C[0][1] = 0;
 
     return C;
 }

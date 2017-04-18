@@ -13,7 +13,7 @@ int
 main(int argc, char **argv)
 {
 
-    int maxIter = 70;
+    int maxIter = 120;
     double timeStep = 1/30.0;
     double maxTime = maxIter*timeStep;
 
@@ -57,7 +57,7 @@ main(int argc, char **argv)
 
     for(int i = 0; i < maxIter; ++i)
     {
-        u[0][0] = 0.5*cos(6*M_PI*timeElapsed/maxTime);
+        u[0][0] = cos(4*M_PI*timeElapsed/maxTime);
         U.push_back(u);
         timeElapsed += timeStep;
     }
@@ -69,7 +69,7 @@ main(int argc, char **argv)
 
     // Iniciando o filtro com valores errados
     X0[0][0] = -1;
-    X0[1][0] = -0.1;
+    X0[1][0] = 0;
 
     LinearKalman KF(X0, A, B, C, Q, R);
     list<Matrix<double>> kalmanEstimatives;
@@ -147,7 +147,7 @@ main(int argc, char **argv)
         }
     }
 
-    cout << "plot(t,disturbedtMeasures);\nhold on;\nplot3(t,noisyMeasures, \".-\");\nplot3(t,outputFromKalmanFiltering, \"--\");\n";
+    cout << "plot(t,disturbedtMeasures);\nhold on;\nplot3(t,noisyMeasures, \".\");\nplot3(t,outputFromKalmanFiltering, \"--\");\n";
     cout << "legend(\"Posicao real do objeto\", \"Posicao dada pelo sensor ruidoso\", \"Posicao estimada pelo Kalman Filter\");\n";
     cout << "print -dpdf particula.pdf\n";
 
