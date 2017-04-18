@@ -1,3 +1,5 @@
+src/MatrixUtils.h
+src/Debug.h
 *.o
 *~
 src/*.o
