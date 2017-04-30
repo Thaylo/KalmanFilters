@@ -67,10 +67,6 @@ main(int argc, char **argv)
     auto disturbedtMeasures = ltiSys.logSystemMeasures(realDisturbedStates);
     auto noisyMeasures = disturbedSys.logSystemMeasures(realDisturbedStates);
 
-    // Iniciando o filtro com valores errados
-    X0[0][0] = -1;
-    X0[1][0] = 0;
-
     LinearKalman KF(X0, A, B, C, Q, R);
     list<Matrix<double>> kalmanEstimatives;
     list<Matrix<double>> outputFromKalmanFiltering;

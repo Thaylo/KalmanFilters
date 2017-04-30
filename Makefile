@@ -1,7 +1,7 @@
-STD :=c++17
+STD :=c++11
 SRCDIR := src
 CPPFLAGS= -std=$(STD) -O3 -DDEBUG -Wall -g
-CC=g++-5
+CC=clang++
 TARGET := bin/filtering
 SRCEXT := cpp
 SOURCES := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
